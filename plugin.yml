@@ -1,0 +1,38 @@
+name: CurseMC
+main: cursemc.Main
+version: '1.0.0-STABLE'
+description: The plugin of CurseMC with custom stuff.
+author: Mr_Matwin3
+website: https://bukkit.org/members/elcreeperhd.91083964/
+depend: [MassiveCore, Factions]
+commands:
+    fireworks:
+      description: Curse Fireworks!
+      usage: /fireworks
+    curse:
+      description: Main command of CurseMC plugin!
+      usage: /curse
+permissions:
+  firework.others:
+    description: Throw fireworks at the location of others
+    default: false
+  curse.skill.give:
+    description: Give Items with skills
+    default: false
+  curse.firework:
+    description: XDDDDDDDDDDDDDDDDD DANK MEMES
+    default: false
+  curse.developer:
+    description: ??? Only Mr_Matwin3 Knows
+    default: false
+  curse.builder:
+    description: Curse Builder Commands
+    default: false
+  curse.admin:
+    description: Gives access to all CurseMC Commands
+    children:
+        curse.skill.give: true
+        firework.others: true
+        firework.you: true
+        curse.builder: true
+        curse.firework: true
