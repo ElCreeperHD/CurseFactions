@@ -1,4 +1,4 @@
-package cursemc;
+package com.github.elcreeperhd.CurseFactions;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +13,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+
 public class Main extends JavaPlugin {
 	
     CommandListener listener = new CommandListener(this);
 	public Logger log = Bukkit.getLogger();
     public EventListener eventos = new EventListener(this);
-	
+    
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(eventos,this);
 		getCommand("fireworks").setExecutor(listener);
 		getCommand("curse").setExecutor(listener);
-		log.info("CurseMC V 1.0.0-STABLE is starting!");
+		getCommand("hub").setExecutor(listener);
+		log.info("CurseMC V 1.1.0-BUGGY is starting!");
 		File statsFile = new File(getDataFolder(), "bounties.yml");
 		Date date = new Date();
 		if (!statsFile.exists()) {

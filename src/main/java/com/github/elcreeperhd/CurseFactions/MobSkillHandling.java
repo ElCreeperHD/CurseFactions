@@ -1,4 +1,4 @@
-package cursemc;
+package com.github.elcreeperhd.CurseFactions;
 
 import java.util.Random;
 import java.util.logging.Logger;

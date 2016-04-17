@@ -1,7 +1,7 @@
-name: CurseMC
-main: cursemc.Main
-version: '1.0.0-STABLE'
-description: The plugin of CurseMC with custom stuff.
+name: CurseFactions
+main: com.github.elcreeperhd.CurseFactions.Main
+version: '1.1.0-BUGGY'
+description: The plugin of CurseFactions with custom stuff.
 author: Mr_Matwin3
 website: https://bukkit.org/members/elcreeperhd.91083964/
 depend: [MassiveCore, Factions]
@@ -12,6 +12,9 @@ commands:
     curse:
       description: Main command of CurseMC plugin!
       usage: /curse
+    hub:
+      description: Go to hub!
+      usage: /hub
 permissions:
   firework.others:
     description: Throw fireworks at the location of others
@@ -20,7 +23,7 @@ permissions:
     description: Give Items with skills
     default: false
   curse.firework:
-    description: XDDDDDDDDDDDDDDDDD DANK MEMES
+    description: /fireworks for himself
     default: false
   curse.developer:
     description: ??? Only Mr_Matwin3 Knows

@@ -1,4 +1,4 @@
-package cursemc;
+package com.github.elcreeperhd.CurseFactions;
 
 
 import java.util.ArrayList;
@@ -23,6 +23,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 
 
@@ -90,9 +93,9 @@ public class CommandListener implements CommandExecutor{
 	        { 	
 			//	Player p = (Player)cmds; 	
                 cmds.sendMessage(ChatColor.GREEN + "+++++++++++++++++++++++++++++");
-                cmds.sendMessage(ChatColor.GREEN + "+" + "       " + ChatColor.YELLOW + "CurseMC V 1.0.0          " + ChatColor.GREEN + "+");
+                cmds.sendMessage(ChatColor.GREEN + "+" + "          " + ChatColor.YELLOW + "CurseMC V 1.1.0          " + ChatColor.GREEN + "+");
                 cmds.sendMessage(ChatColor.GREEN + "+" + "    " + ChatColor.YELLOW + "Developed by Mr_Matwin3     " + ChatColor.GREEN + "+");
-                cmds.sendMessage(ChatColor.GREEN + "+" + "        " + ChatColor.RED + "/curse help      " + ChatColor.GREEN +  "+");
+                cmds.sendMessage(ChatColor.GREEN + "+" + "            " + ChatColor.RED + "/curse help           " + ChatColor.GREEN +  "+");
                 cmds.sendMessage(ChatColor.GREEN + "+++++++++++++++++++++++++++++");
 	        }
 	        else if (args.length == 1){
@@ -147,11 +150,12 @@ public class CommandListener implements CommandExecutor{
 
 	      	     Material m = Material.valueOf(args[1]);
 	      	     if(m != null)	{
+	      	    	 String args2 = args[2].replaceAll("_", " ");
 	 	    		ItemStack item = new ItemStack(Material.valueOf(args[1]), 1);
 	 	        	cmds.sendMessage(prefix + ChatColor.RED + " You just got an item with skills!");
 	    		ItemMeta meta = item.getItemMeta();
 	    		List<String> lorelist = new ArrayList<String>();
-	    		lorelist.add(ChatColor.GOLD + "Skill: " + getColor(args[2]) + args[2] + " " + ChatColor.DARK_GREEN + "[" + args[3]+ "]");//This is the first line of lore
+	    		lorelist.add(ChatColor.GOLD + "Skill: " + getColor(args2) + args2 + " " + ChatColor.DARK_GREEN + "[" + args[3]+ "]");//This is the first line of lore
                meta.setLore(lorelist);
 	    		item.setItemMeta(meta);
 	    		p.getInventory().addItem(item);
@@ -194,12 +198,13 @@ public class CommandListener implements CommandExecutor{
 
 	      	     Material m = Material.valueOf(args[1]);
 	      	     if(m != null)	{
+	      	  	 String args2 = args[2].replaceAll("_", " ");
 	 	    		ItemStack item = new ItemStack(Material.valueOf(args[1]), 1);
 	 	        	cmds.sendMessage(prefix + ChatColor.RED + " You just gave an item with skills to "  + ChatColor.GREEN + args[1]);
-	 	        	plugin.log.info(args[1] + " with " + args[2] + args[3] + " given to " + args[4]);
+	 	        	plugin.log.info(args[1] + " with " + args2 + args[3] + " given to " + args[4]);
 	    		ItemMeta meta = item.getItemMeta();
 	    		List<String> lorelist = new ArrayList<String>();
-	    		lorelist.add(ChatColor.GOLD + "Skill: " + getColor(args[2]) + args[2] + " " + ChatColor.DARK_GREEN + "[" + args[3]+ "]");//This is the first line of lore
+	    		lorelist.add(ChatColor.GOLD + "Skill: " + getColor(args2) + args2 + " " + ChatColor.DARK_GREEN + "[" + args[3]+ "]");//This is the first line of lore
                meta.setLore(lorelist);
 	    		item.setItemMeta(meta);
 	    		p.getInventory().addItem(item);
@@ -213,8 +218,9 @@ public class CommandListener implements CommandExecutor{
 	 cmds.sendMessage(prefix + ChatColor.RED + " Sorry, you need permissions!");
  }
 	               }else{	
+	  	      	  	 String args2 = args[2].replaceAll("_", " ");
 	            	   cmds.sendMessage(prefix + ChatColor.RED + "" + ChatColor.BOLD + " That player is not online!");
-		 	        	plugin.log.info("Error: Player not online. " + args[1] + " with " + args[2] + args[3] + " given with errors to " + args[4]);
+		 	        	plugin.log.info("Error: Player not online. " + args[1] + " with " + args2 + args[3] + " given with errors to " + args[4]);
 	               }//fin is not online
 	        	}//fin if 
 	        }//fin args
@@ -231,6 +237,21 @@ public class CommandListener implements CommandExecutor{
 	        
 	        return true;
 		}//end cmd
+		else if(cmd.getName().equalsIgnoreCase("hub")){	
+			if(cmds instanceof Player){	
+				cmds.sendMessage(ChatColor.GREEN + "Sent to the hub! Thanks for playing :)");
+			Player player = (Player)cmds;
+			plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+			  ByteArrayDataOutput out = ByteStreams.newDataOutput();
+			  out.writeUTF("ConnectOther");
+			  out.writeUTF(player.getName());
+			  out.writeUTF("lobby");
+			  player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+			  return true;
+			}
+			return true;
+			
+		}
 		
 	/*	else if(cmd.getName().equalsIgnoreCase("bounty")) {	
 			
@@ -317,7 +338,7 @@ public class CommandListener implements CommandExecutor{
 					  
 				  }else if(skill.equalsIgnoreCase("Freeze"))	{
 					  return ChatColor.AQUA;
-				  }else if(skill.equalsIgnoreCase("Vampiric Regeneration"))	{
+				  }else if(skill.equalsIgnoreCase("Vampiric"))	{
 					  return ChatColor.DARK_RED;
 					  }
 				  else if(skill.equalsIgnoreCase("Venomous Strike"))	{
@@ -332,6 +353,9 @@ public class CommandListener implements CommandExecutor{
 				  else if(skill.equalsIgnoreCase("Lightning"))	{
 					  return ChatColor.YELLOW;
 					  }
+				  else if(skill.equalsIgnoreCase("Venomous Thorns"))	{
+					  return ChatColor.DARK_GREEN;
+					  }		  
 				  else if(skill.equalsIgnoreCase("ALL"))	{
 					  return ChatColor.RED;
 					  }

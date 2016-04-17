@@ -1,4 +1,4 @@
-package cursemc;
+package com.github.elcreeperhd.CurseFactions;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

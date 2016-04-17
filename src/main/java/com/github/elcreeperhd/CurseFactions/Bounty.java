@@ -1,4 +1,4 @@
-package cursemc;
+package com.github.elcreeperhd.CurseFactions;
 
 import java.io.File;
 import java.io.IOException;
