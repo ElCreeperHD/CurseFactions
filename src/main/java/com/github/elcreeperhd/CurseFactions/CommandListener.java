@@ -245,7 +245,7 @@ public class CommandListener implements CommandExecutor{
 			  ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			  out.writeUTF("ConnectOther");
 			  out.writeUTF(player.getName());
-			  out.writeUTF("lobby");
+			  out.writeUTF("hub");
 			  player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 			  return true;
 			}
