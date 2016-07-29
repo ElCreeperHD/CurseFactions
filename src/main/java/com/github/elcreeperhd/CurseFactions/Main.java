@@ -25,7 +25,6 @@ public class Main extends JavaPlugin {
 		getCommand("fireworks").setExecutor(listener);
 		getCommand("curse").setExecutor(listener);
 		getCommand("hub").setExecutor(listener);
-		log.info("CurseMC V 1.1.0-BUGGY is starting!");
 		File statsFile = new File(getDataFolder(), "bounties.yml");
 		Date date = new Date();
 		if (!statsFile.exists()) {

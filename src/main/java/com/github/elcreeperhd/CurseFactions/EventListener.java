@@ -13,7 +13,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.FireworkEffect.Type;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -22,6 +24,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,9 +37,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 
 public class EventListener implements Listener
@@ -45,6 +56,107 @@ public class EventListener implements Listener
 	String prefix = ChatColor.WHITE + "[" + ChatColor.AQUA + "CurseMC" + ChatColor.WHITE + "]";
 	Logger log = Bukkit.getLogger();
 	ArmorPlayerSkillHandling armorhandle = new ArmorPlayerSkillHandling();
+	Inventory menu = Bukkit.createInventory(null,9, ChatColor.GREEN + "" + ChatColor.BOLD + "Class selector");
+	
+	ItemStack hunter = new ItemStack(Material.DIAMOND_SWORD);
+	ItemStack animal = new ItemStack(Material.MONSTER_EGG);
+	ItemStack undead = new ItemStack(Material.SKULL_ITEM);
+
+	ItemMeta hunteri = hunter.getItemMeta();
+	ItemMeta animali = animal.getItemMeta();
+	ItemMeta undeadi = undead.getItemMeta();
+
+	
+	@EventHandler
+	public void Join(PlayerJoinEvent ev)
+	{	
+		hunteri.addEnchant(Enchantment.DAMAGE_ALL, 10, false);
+		hunteri.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Hunter Class");
+		animali.setDisplayName(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "Animal Class");
+		undeadi.setDisplayName(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Undead Class");	
+		hunter.setItemMeta(hunteri);
+		animal.setItemMeta(animali);
+		undead.setItemMeta(undeadi);
+		menu.setItem(0,hunter);
+		menu.setItem(1,animal);
+		menu.setItem(2,undead);
+		OfflinePlayer op = Bukkit.getOfflinePlayer(ev.getPlayer().getUniqueId());
+		Bukkit.broadcastMessage("DEBUG 1");
+		Bukkit.broadcastMessage("Player info: " + ev.getPlayer().hasPermission("class.hunter") + " " + ev.getPlayer().hasPermission("class.animal") + " " + ev.getPlayer().hasPermission("class.undead"));
+		if(!op.hasPlayedBefore()){	
+			ev.getPlayer().sendMessage(ChatColor.GREEN  + "" + ChatColor.BOLD + "Please select a class before you start, " + ChatColor.YELLOW  + "" + ev.getPlayer().getName() + ChatColor.GREEN + "" + "!");
+			ev.getPlayer().openInventory(menu);
+		}
+		if(!ev.getPlayer().hasPermission("class.hunter")&& !ev.getPlayer().hasPermission("class.animal") && !ev.getPlayer().hasPermission("class.undead")){	
+			Bukkit.broadcastMessage("DEBUG 2");
+			ev.getPlayer().sendMessage(ChatColor.GREEN  + "" + ChatColor.BOLD + "Please select a class before you start, " + ChatColor.YELLOW  + "" + ev.getPlayer().getName() + ChatColor.GREEN + "" + "!");
+			ev.getPlayer().openInventory(menu);
+			
+		}
+		if(ev.getPlayer().hasPermission("class.hunter")){	
+			ev.getPlayer().addPotionEffect(
+		              new PotionEffect(PotionEffectType.INCREASE_DAMAGE, -1, 2));
+			
+		}else if(ev.getPlayer().hasPermission("class.animal")){	
+			ev.getPlayer().addPotionEffect(
+		              new PotionEffect(PotionEffectType.SPEED, -1, 2));
+			//ChatColor.RED + "{Hunter}"
+		}
+	}
+	
+	//
+    @EventHandler
+    public void CloseInv(InventoryCloseEvent ev){
+        Inventory i = ev.getInventory();
+        if(i.getName().equalsIgnoreCase(menu.getName()) ){
+            new BukkitRunnable() {
+                public void run() {
+                    ev.getPlayer().openInventory(i);
+                }
+            }.runTaskLater(plugin, 30);
+    }
+
+        }
+    
+	
+	
+	
+	//
+	@EventHandler
+	public void DragEvent(InventoryDragEvent ev){
+		if(ev.getInventory().getName().equalsIgnoreCase(ChatColor.GREEN + "" + ChatColor.BOLD + "Class selector")){	
+			ev.setCancelled(true);
+		}	
+	}
+	
+	@EventHandler(ignoreCancelled=true)
+	public void InventoryClick(InventoryClickEvent ev){
+		String invname = ChatColor.GREEN + "" + ChatColor.BOLD + "Class selector";
+		Player clicker =(Player) ev.getWhoClicked();
+		if(ev.getInventory().getTitle().equalsIgnoreCase(invname)){
+			ev.setCancelled(true);
+			if(!ev.getCurrentItem().equals(null) && ev.getCurrentItem().getType().equals(Material.DIAMOND_SWORD)){	
+				PermissionsEx.getUser(clicker).addPermission("class.hunter");
+				PermissionsEx.getUser(clicker).setSuffix(ChatColor.DARK_GREEN + "{Hunter}", clicker.getWorld().getName());
+				clicker.closeInventory();
+			}	
+			else if(!ev.getCurrentItem().equals(null) && ev.getCurrentItem().getType().equals(Material.MONSTER_EGG)){	
+				PermissionsEx.getUser(clicker).addPermission("class.animal");
+				PermissionsEx.getUser(clicker).setSuffix(ChatColor.AQUA + "{Animal}", clicker.getWorld().getName());
+				clicker.closeInventory();
+			}
+			else if(!ev.getCurrentItem().equals(null) && ev.getCurrentItem().getType().equals(Material.SKULL_ITEM)){	
+				PermissionsEx.getUser(clicker).addPermission("class.undead");
+				PermissionsEx.getUser(clicker).setSuffix(ChatColor.DARK_GRAY + "{Undead}", clicker.getWorld().getName());
+			    clicker.closeInventory();
+			}
+		}
+	}
+	
+	
+	
+	
+	
 	@EventHandler
 	public void EntityDamage(EntityDamageByEntityEvent ev)
 	{
@@ -56,7 +168,13 @@ public class EventListener implements Listener
 
 			Player p = (Player) damager;
 
-
+           if(p.hasPermission("class.undead")){	
+        	   if(damaged instanceof Player){
+        		  ((Player) damaged).getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
+        	   }else if(damaged instanceof LivingEntity){	
+        		 ((LivingEntity) damaged).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
+        	   }
+           }
 
 			//Inicio Armor
 
@@ -251,6 +369,8 @@ public class EventListener implements Listener
 		}//end instance player damager
 
 	}//end event
+	
+	
 
 	void Beheading(Player damaged, Player damager, int level)
 	{

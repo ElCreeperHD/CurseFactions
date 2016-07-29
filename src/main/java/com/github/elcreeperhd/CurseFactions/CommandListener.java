@@ -93,14 +93,14 @@ public class CommandListener implements CommandExecutor{
 	        { 	
 			//	Player p = (Player)cmds; 	
                 cmds.sendMessage(ChatColor.GREEN + "+++++++++++++++++++++++++++++");
-                cmds.sendMessage(ChatColor.GREEN + "+" + "          " + ChatColor.YELLOW + "CurseMC V 1.1.0          " + ChatColor.GREEN + "+");
-                cmds.sendMessage(ChatColor.GREEN + "+" + "    " + ChatColor.YELLOW + "Developed by Mr_Matwin3     " + ChatColor.GREEN + "+");
-                cmds.sendMessage(ChatColor.GREEN + "+" + "            " + ChatColor.RED + "/curse help           " + ChatColor.GREEN +  "+");
+                cmds.sendMessage(ChatColor.GREEN + "+" + "           " + ChatColor.YELLOW + "CurseMC V 1.1.0          " + ChatColor.GREEN + "+");
+                cmds.sendMessage(ChatColor.GREEN + "+" + "     " + ChatColor.YELLOW + "Developed by Mr_Matwin3     " + ChatColor.GREEN + "+");
+                cmds.sendMessage(ChatColor.GREEN + "+" + "             " + ChatColor.RED + "/curse help            " + ChatColor.GREEN +  "+");
                 cmds.sendMessage(ChatColor.GREEN + "+++++++++++++++++++++++++++++");
 	        }
 	        else if (args.length == 1){
 	         if(args[0].equalsIgnoreCase("skills"))	{
-                cmds.sendMessage(ChatColor.RED + "Use /curse skills item Skill Level");
+                cmds.sendMessage(ChatColor.RED + "Use /curse skills [item} [skill] [level]");
 	        	}//close skills
 	         else if(args[0].equalsIgnoreCase("building"))	{
 	        	 if(cmds.hasPermission("curse.building")){	
