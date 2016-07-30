@@ -1,10 +1,10 @@
 name: CurseFactions
 main: com.github.elcreeperhd.CurseFactions.Main
-version: '1.1.0-BUGGY'
+version: '1.3.0-BUGGY'
 description: The plugin of CurseFactions with custom stuff.
 author: Mr_Matwin3
 website: https://bukkit.org/members/elcreeperhd.91083964/
-depend: [MassiveCore, Factions]
+depend: [MassiveCore, Factions, PermissionsEx]
 commands:
     fireworks:
       description: Curse Fireworks!
